@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator Demo ✨</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .color-picker {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        
+        .color-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .color-btn.active {
+            border-color: #333;
+            transform: scale(1.1);
+        }
+        
+        .generate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .generate-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            display: none;
+        }
+        
+        .qr-canvas {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .download-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+        
+        .download-btn:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="gradient-text">QR Code Generator ✨</h1>
+        <p class="subtitle">Tạo mã QR đẹp mắt chỉ trong vài giây</p>
+        
+        <div class="input-group">
+            <label for="qr-text">Nội dung QR Code:</label>
+            <input type="text" id="qr-text" placeholder="Nhập URL, văn bản, số điện thoại..." />
+        </div>
+        
+        <div class="input-group">
+            <label>Màu sắc:</label>
+            <div class="color-picker">
+                <button class="color-btn active" data-color="#000000" style="background: #000000;"></button>
+                <button class="color-btn" data-color="#3B82F6" style="background: #3B82F6;"></button>
+                <button class="color-btn" data-color="#10B981" style="background: #10B981;"></button>
+                <button class="color-btn" data-color="#F59E0B" style="background: #F59E0B;"></button>
+                <button class="color-btn" data-color="#EF4444" style="background: #EF4444;"></button>
+                <button class="color-btn" data-color="#8B5CF6" style="background: #8B5CF6;"></button>
+                <button class="color-btn" data-color="#EC4899" style="background: #EC4899;"></button>
+                <button class="color-btn" data-color="#06B6D4" style="background: #06B6D4;"></button>
+            </div>
+        </div>
+        
+        <button id="generate-btn" class="generate-btn">Tạo QR Code</button>
+        
+        <div id="result" class="result">
+            <canvas id="qr-canvas" class="qr-canvas"></canvas>
+            <br>
+            <button id="download-btn" class="download-btn">Tải xuống QR Code</button>
+        </div>
+        
+        <div class="footer">
+            <p>✨ Made with ❤️ by Nguyen Thanh Nam</p>
+            <p>Chạy trực tiếp trên GitHub - Không cần cài đặt!</p>
+        </div>
+    </div>
+
+    <script>
+        let selectedColor = '#000000';
+        
+        // Color selection
+        document.querySelectorAll('.color-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedColor = btn.dataset.color;
+            });
+        });
+        
+        // Generate QR Code
+        document.getElementById('generate-btn').addEventListener('click', async () => {
+            const text = document.getElementById('qr-text').value.trim();
+            
+            if (!text) {
+                alert('Vui lòng nhập nội dung cho QR code!');
+                return;
+            }
+            
+            const btn = document.getElementById('generate-btn');
+            btn.textContent = 'Đang tạo...';
+            btn.disabled = true;
+            
+            try {
+                const canvas = document.getElementById('qr-canvas');
+                await QRCode.toCanvas(canvas, text, {
+                    width: 256,
+                    color: {
+                        dark: selectedColor,
+                        light: '#FFFFFF'
+                    },
+                    errorCorrectionLevel: 'H'
+                });
+                
+                document.getElementById('result').style.display = 'block';
+                btn.textContent = 'Tạo QR Code';
+                btn.disabled = false;
+            } catch (error) {
+                alert('Có lỗi xảy ra khi tạo QR code!');
+                btn.textContent = 'Tạo QR Code';
+                btn.disabled = false;
+            }
+        });
+        
+        // Download QR Code
+        document.getElementById('download-btn').addEventListener('click', () => {
+            const canvas = document.getElementById('qr-canvas');
+            const link = document.createElement('a');
+            link.download = 'qr-code.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+        
+        // Enter key to generate
+        document.getElementById('qr-text').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('generate-btn').click();
+            }
+        });
+    </script>
+</body>
+</html>

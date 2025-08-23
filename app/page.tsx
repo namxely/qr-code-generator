@@ -81,10 +81,12 @@ export default function Home() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.5 }}
-          className="text-center mt-12 text-gray-600"
+          className="text-center mt-12"
         >
-          <p className="flex items-center justify-center gap-1">
-            Made with <Heart className="w-4 h-4 text-red-500 fill-current" /> using Next.js & AI
+          <p className="flex items-center justify-center gap-2 text-lg font-semibold bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent">
+            <Sparkles className="w-5 h-5 text-purple-500" />
+             Nguyen Thanh Nam
+            <Sparkles className="w-5 h-5 text-blue-500" />
           </p>
         </motion.footer>
       </div>
