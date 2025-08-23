@@ -2,7 +2,7 @@
 
 Một ứng dụng web hiện đại để tạo mã QR độc đáo với sức mạnh của AI.
 
-## 🚀 Live Demo
+## 🚀 Live 
 
 **👉 [Chạy ứng dụng ngay tại đây](https://huggingface.co/spaces/NamXely/ai-qr-generator)**
 
