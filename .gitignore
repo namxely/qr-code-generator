@@ -1,9 +1,1 @@
-node_modules/
-.next/
-out/
-.env*
-npm-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-.vscode/
-.DS_Store
+node_modules
